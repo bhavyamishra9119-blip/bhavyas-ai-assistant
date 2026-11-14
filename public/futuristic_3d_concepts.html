@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Futuristic 3D Entry Concepts — Bhavya's AI Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+
+<!-- Three.js CDN for real 3D WebGL rendering -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root {
+  --bg: #03050d;
+  --accent-cyan: #00e5ff;
+  --accent-purple: #a855f7;
+  --accent-emerald: #10b981;
+  --accent-rose: #f472b6;
+  --active-color: #00e5ff;
+  --active-secondary: #00b4d8;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow-x: hidden;
+  padding-bottom: 60px;
+}
+
+/* Header Navbar */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(3, 5, 13, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  background: linear-gradient(135deg, #fff, var(--active-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.theme-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.theme-btn {
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.theme-btn.active, .theme-btn:hover {
+  border-color: var(--active-color);
+  background: rgba(255,255,255,0.12);
+  box-shadow: 0 0 12px var(--active-color);
+}
+
+.container {
+  max-width: 1400px;
+  margin: 30px auto;
+  padding: 0 24px;
+}
+
+.intro-desc {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.intro-desc h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.intro-desc p {
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+/* 3D Concept Grid */
+.concept-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(620px, 1fr));
+  gap: 36px;
+}
+
+@media (max-width: 680px) {
+  .concept-grid { grid-template-columns: 1fr; }
+}
+
+.concept-card {
+  position: relative;
+  background: rgba(12, 16, 32, 0.6);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.concept-card:hover {
+  border-color: rgba(255,255,255,0.28);
+  transform: translateY(-4px);
+  box-shadow: 0 30px 70px rgba(0,0,0,0.8), 0 0 30px rgba(0,229,255,0.15);
+}
+
+.concept-header {
+  padding: 20px 26px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.02);
+}
+
+.concept-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--active-color);
+  background: rgba(0,229,255,0.1);
+  padding: 4px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,229,255,0.25);
+}
+
+.concept-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* 3D WebGL Canvas Viewport Stage */
+.stage-3d {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  background: #020309;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.webgl-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+}
+
+/* Floating Glass UI Overlay */
+.ui-overlay {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+/* Concept 1 UI Card */
+.hud-card-1 {
+  width: 320px;
+  padding: 32px 28px;
+  border-radius: 26px;
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.08) 0%, rgba(12, 14, 28, 0.75) 100%);
+  backdrop-filter: blur(32px) saturate(190%);
+  -webkit-backdrop-filter: blur(32px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 40px rgba(0,229,255,0.2);
+}
+
+/* Concept 2 UI Card */
+.hud-card-2 {
+  width: 320px;
+  padding: 30px;
+  clip-path: polygon(24px 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%, 0 24px);
+  background: rgba(8, 11, 24, 0.85);
+  backdrop-filter: blur(24px);
+  border: 1.5px solid var(--active-color);
+  box-shadow: 0 0 40px var(--active-color);
+}
+
+/* Concept 3 UI Card */
+.hud-card-3 {
+  width: 320px;
+  padding: 32px 28px;
+  border-radius: 28px;
+  background: rgba(18, 22, 42, 0.7);
+  backdrop-filter: blur(30px);
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 25px 70px rgba(0,0,0,0.8);
+}
+
+/* Concept 4 UI Card */
+.hud-card-4 {
+  width: 320px;
+  padding: 34px 28px;
+  border-radius: 16px;
+  background: rgba(10, 10, 16, 0.9);
+  backdrop-filter: blur(30px);
+  border-left: 4px solid var(--active-color);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  border-right: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+}
+
+/* Common UI Elements */
+.hud-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--active-color);
+  margin-bottom: 10px;
+}
+
+.hud-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--active-color);
+  box-shadow: 0 0 8px var(--active-color);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+.hud-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.hud-subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 22px;
+}
+
+.hud-field label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 1px;
+  color: var(--active-color);
+  margin-bottom: 6px;
+}
+
+.hud-input {
+  width: 100%;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 13.5px;
+  outline: none;
+  margin-bottom: 18px;
+  transition: all 0.25s ease;
+}
+
+.hud-input:focus {
+  border-color: var(--active-color);
+  box-shadow: 0 0 20px var(--active-color);
+}
+
+.hud-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: linear-gradient(135deg, var(--active-secondary), var(--active-color));
+  color: #030712;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  box-shadow: 0 8px 25px var(--active-color);
+  transition: all 0.25s ease;
+}
+
+.hud-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px var(--active-color);
+}
+
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand-title">Bhavya's AI Assistant — Interactive 3D Entry Concepts</div>
+  <div class="theme-selector">
+    <button class="theme-btn active" onclick="setTheme('cyber', '#00e5ff', '#00b4d8')">⚡ Cyber Teal</button>
+    <button class="theme-btn" onclick="setTheme('emerald', '#10b981', '#059669')">🟢 Aurora Mint</button>
+    <button class="theme-btn" onclick="setTheme('rose', '#f472b6', '#db2777')">🌸 Sakura Pink</button>
+    <button class="theme-btn" onclick="setTheme('purple', '#a855f7', '#7c3aed')">🌌 Vortex Violet</button>
+  </div>
+</header>
+
+<div class="container">
+  <div class="intro-desc">
+    <h1>Futuristic 3D Entry Designs (WebGL & Real-Time Physics)</h1>
+    <p>Move your cursor over each 3D stage to interact with the 3D objects in real time!</p>
+  </div>
+
+  <div class="concept-grid">
+
+    <!-- CONCEPT 1 -->
+    <div class="concept-card">
+      <div class="concept-header">
+        <span class="concept-title">Concept 1: Quantum AI Core (3D Metallic Torus & Particle Aura)</span>
+        <span class="concept-number">CONCEPT #01</span>
+      </div>
+      <div class="stage-3d">
+        <canvas id="c1-canvas" class="webgl-canvas"></canvas>
+        <div class="ui-overlay">
+          <div class="hud-card-1">
+            <div class="hud-eyebrow"><span class="hud-dot"></span>QUANTUM_CORE // ONLINE</div>
+            <div class="hud-title">WELCOME</div>
+            <div class="hud-subtitle">BHAVYA'S AI ASSISTANT</div>
+            <div class="hud-field">
+              <label>OPERATOR USERNAME</label>
+              <input class="hud-input" value="Bhavya Mishra" />
+            </div>
+            <button class="hud-btn">INITIALIZE AI →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONCEPT 2 -->
+    <div class="concept-card">
+      <div class="concept-header">
+        <span class="concept-title">Concept 2: Neural Lattice Matrix (Interactive 3D Node Mesh)</span>
+        <span class="concept-number">CONCEPT #02</span>
+      </div>
+      <div class="stage-3d">
+        <canvas id="c2-canvas" class="webgl-canvas"></canvas>
+        <div class="ui-overlay">
+          <div class="hud-card-2">
+            <div class="hud-eyebrow"><span class="hud-dot"></span>NEURAL_LATTICE // READY</div>
+            <div class="hud-title">WELCOME</div>
+            <div class="hud-subtitle">BHAVYA'S AI ASSISTANT</div>
+            <div class="hud-field">
+              <label>OPERATOR USERNAME</label>
+              <input class="hud-input" value="Bhavya Mishra" />
+            </div>
+            <button class="hud-btn">CONNECT LATTICE →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONCEPT 3 -->
+    <div class="concept-card">
+      <div class="concept-header">
+        <span class="concept-title">Concept 3: Warp Drive Hyperspace Tunnel (Kinetic Particle Stream)</span>
+        <span class="concept-number">CONCEPT #03</span>
+      </div>
+      <div class="stage-3d">
+        <canvas id="c3-canvas" class="webgl-canvas"></canvas>
+        <div class="ui-overlay">
+          <div class="hud-card-3">
+            <div class="hud-eyebrow"><span class="hud-dot"></span>HYPERSPACE // ACTIVE</div>
+            <div class="hud-title">WELCOME</div>
+            <div class="hud-subtitle">BHAVYA'S AI ASSISTANT</div>
+            <div class="hud-field">
+              <label>OPERATOR USERNAME</label>
+              <input class="hud-input" value="Bhavya Mishra" />
+            </div>
+            <button class="hud-btn">ENGAGE WARP →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONCEPT 4 -->
+    <div class="concept-card">
+      <div class="concept-header">
+        <span class="concept-title">Concept 4: Monolithic Quantum Cyber-Cube (3D Glass Cube & Emitter)</span>
+        <span class="concept-number">CONCEPT #04</span>
+      </div>
+      <div class="stage-3d">
+        <canvas id="c4-canvas" class="webgl-canvas"></canvas>
+        <div class="ui-overlay">
+          <div class="hud-card-4">
+            <div class="hud-eyebrow"><span class="hud-dot"></span>MONOLITH_SLAB // v4.9</div>
+            <div class="hud-title">WELCOME</div>
+            <div class="hud-subtitle">BHAVYA'S AI ASSISTANT</div>
+            <div class="hud-field">
+              <label>OPERATOR USERNAME</label>
+              <input class="hud-input" value="Bhavya Mishra" />
+            </div>
+            <button class="hud-btn">ENTER SYSTEM →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Three.js Real 3D Rendering Scripts -->
+<script>
+let currentPrimaryColor = 0x00e5ff;
+let currentSecondaryColor = 0x00b4d8;
+
+function setTheme(name, primaryHex, secondaryHex) {
+  document.documentElement.style.setProperty('--active-color', primaryHex);
+  document.documentElement.style.setProperty('--active-secondary', secondaryHex);
+  document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+
+  currentPrimaryColor = parseInt(primaryHex.replace('#', '0x'));
+  currentSecondaryColor = parseInt(secondaryHex.replace('#', '0x'));
+
+  if(mat1) mat1.color.setHex(currentPrimaryColor);
+  if(mat4) mat4.color.setHex(currentPrimaryColor);
+}
+
+// ─────────────────────────────────────────────────────────────
+// 3D SCENE 1: Quantum AI Core (3D Torus Knot & Particle Field)
+// ─────────────────────────────────────────────────────────────
+let mat1;
+(function initScene1() {
+  const canvas = document.getElementById('c1-canvas');
+  const stage = canvas.parentElement;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, stage.clientWidth / stage.clientHeight, 0.1, 1000);
+  camera.position.z = 7;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setSize(stage.clientWidth, stage.clientHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  // 3D Metallic Glass Torus Knot Core
+  const geo1 = new THREE.TorusKnotGeometry(1.4, 0.35, 128, 32);
+  mat1 = new THREE.MeshStandardMaterial({
+    color: currentPrimaryColor,
+    metalness: 0.8,
+    roughness: 0.2,
+    wireframe: false
+  });
+  const mesh1 = new THREE.Mesh(geo1, mat1);
+  scene.add(mesh1);
+
+  // Wireframe accent overlay
+  const wireMat = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, transparent: true, opacity: 0.15 });
+  const wireMesh = new THREE.Mesh(geo1, wireMat);
+  mesh1.add(wireMesh);
+
+  // Lights
+  const light1 = new THREE.PointLight(0x00e5ff, 3, 20);
+  light1.position.set(3, 3, 3);
+  scene.add(light1);
+
+  const light2 = new THREE.PointLight(0xa855f7, 2, 20);
+  light2.position.set(-3, -3, -3);
+  scene.add(light2);
+
+  const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+  scene.add(ambient);
+
+  // Mouse Interaction
+  let mouseX = 0, mouseY = 0;
+  stage.addEventListener('mousemove', (e) => {
+    const rect = stage.getBoundingClientRect();
+    mouseX = ((e.clientX - rect.left) / stage.clientWidth) * 2 - 1;
+    mouseY = -((e.clientY - rect.top) / stage.clientHeight) * 2 + 1;
+  });
+
+  function animate1() {
+    requestAnimationFrame(animate1);
+    mesh1.rotation.x += 0.006;
+    mesh1.rotation.y += 0.008;
+
+    mesh1.rotation.y += (mouseX * 0.5 - mesh1.rotation.y) * 0.05;
+    mesh1.rotation.x += (-mouseY * 0.5 - mesh1.rotation.x) * 0.05;
+
+    renderer.render(scene, camera);
+  }
+  animate1();
+})();
+
+// ─────────────────────────────────────────────────────────────
+// 3D SCENE 2: Neural Lattice Matrix (Point Cloud & Lines)
+// ─────────────────────────────────────────────────────────────
+(function initScene2() {
+  const canvas = document.getElementById('c2-canvas');
+  const stage = canvas.parentElement;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, stage.clientWidth / stage.clientHeight, 0.1, 1000);
+  camera.position.z = 8;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setSize(stage.clientWidth, stage.clientHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  const particleCount = 180;
+  const geometry = new THREE.BufferGeometry();
+  const positions = new Float32Array(particleCount * 3);
+
+  for (let i = 0; i < particleCount * 3; i++) {
+    positions[i] = (Math.random() - 0.5) * 10;
+  }
+
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+  const pMat = new THREE.PointsMaterial({
+    color: 0x00e5ff,
+    size: 0.08,
+    transparent: true,
+    opacity: 0.8
+  });
+
+  const pSystem = new THREE.Points(geometry, pMat);
+  scene.add(pSystem);
+
+  function animate2() {
+    requestAnimationFrame(animate2);
+    pSystem.rotation.y += 0.002;
+    pSystem.rotation.x += 0.001;
+    renderer.render(scene, camera);
+  }
+  animate2();
+})();
+
+// ─────────────────────────────────────────────────────────────
+// 3D SCENE 3: Warp Drive Hyperspace Tunnel
+// ─────────────────────────────────────────────────────────────
+(function initScene3() {
+  const canvas = document.getElementById('c3-canvas');
+  const stage = canvas.parentElement;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, stage.clientWidth / stage.clientHeight, 0.1, 1000);
+  camera.position.z = 1;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setSize(stage.clientWidth, stage.clientHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  const starsGeo = new THREE.BufferGeometry();
+  const starCount = 600;
+  const starPos = new Float32Array(starCount * 3);
+
+  for(let i=0; i<starCount; i++) {
+    starPos[i*3] = (Math.random() - 0.5) * 20;
+    starPos[i*3+1] = (Math.random() - 0.5) * 20;
+    starPos[i*3+2] = Math.random() * 40 - 20;
+  }
+
+  starsGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+  const starsMat = new THREE.PointsMaterial({ color: 0x00e5ff, size: 0.1 });
+  const starField = new THREE.Points(starsGeo, starsMat);
+  scene.add(starField);
+
+  function animate3() {
+    requestAnimationFrame(animate3);
+    const pos = starsGeo.attributes.position.array;
+    for(let i=0; i<starCount; i++) {
+      pos[i*3+2] += 0.15;
+      if(pos[i*3+2] > 10) pos[i*3+2] = -20;
+    }
+    starsGeo.attributes.position.needsUpdate = true;
+    renderer.render(scene, camera);
+  }
+  animate3();
+})();
+
+// ─────────────────────────────────────────────────────────────
+// 3D SCENE 4: Monolithic Quantum Cyber-Cube
+// ─────────────────────────────────────────────────────────────
+let mat4;
+(function initScene4() {
+  const canvas = document.getElementById('c4-canvas');
+  const stage = canvas.parentElement;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, stage.clientWidth / stage.clientHeight, 0.1, 1000);
+  camera.position.z = 6;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setSize(stage.clientWidth, stage.clientHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  const cubeGeo = new THREE.BoxGeometry(2, 2, 2);
+  mat4 = new THREE.MeshStandardMaterial({
+    color: currentPrimaryColor,
+    metalness: 0.9,
+    roughness: 0.1,
+    wireframe: false
+  });
+  const cube = new THREE.Mesh(cubeGeo, mat4);
+  scene.add(cube);
+
+  const innerGeo = new THREE.SphereGeometry(0.8, 32, 32);
+  const innerMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  const innerSphere = new THREE.Mesh(innerGeo, innerMat);
+  cube.add(innerSphere);
+
+  const pLight = new THREE.PointLight(0x00e5ff, 3, 10);
+  pLight.position.set(2, 4, 3);
+  scene.add(pLight);
+
+  const ambLight = new THREE.AmbientLight(0xffffff, 0.3);
+  scene.add(ambLight);
+
+  function animate4() {
+    requestAnimationFrame(animate4);
+    cube.rotation.x += 0.005;
+    cube.rotation.y += 0.007;
+    renderer.render(scene, camera);
+  }
+  animate4();
+})();
+</script>
+</body>
+</html>

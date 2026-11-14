@@ -1,0 +1,19 @@
+node_modules/
+dist/
+release/
+android/app/build/
+android/.gradle/
+android/build/
+.vercel/
+.env*
+keys.json
+*.apk
+*.log
+.DS_Store
+
+# Security & Build Exclusions
+dist-electron/
+android/app/src/main/assets/public/
+*.aab
+.env.local
+.env.*.local

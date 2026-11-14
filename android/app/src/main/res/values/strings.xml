@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Bhavya\'s AI Assistant</string>
+    <string name="title_activity_main">Bhavya\'s AI Assistant</string>
+    <string name="package_name">com.bhavya.aiassistant</string>
+    <string name="custom_url_scheme">com.bhavya.aiassistant</string>
+</resources>

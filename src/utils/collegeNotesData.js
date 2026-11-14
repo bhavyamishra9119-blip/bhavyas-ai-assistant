@@ -1,0 +1,361 @@
+/**
+ * Curated College Notes & Academic Engineering Registry
+ * Covers 40+ curated engineering subjects, master notes, exam revision sheets, and lab manuals.
+ */
+
+export const COLLEGE_NOTE_CATEGORIES = [
+  { id: 'all', label: 'All Resources', icon: '📚' },
+  { id: 'dsa_prog', label: 'DSA & Programming', icon: '💻' },
+  { id: 'core_cs', label: 'Core CS & Systems', icon: '⚙️' },
+  { id: 'ai_ml', label: 'AI & Data Science', icon: '🧠' },
+  { id: 'engineering_sciences', label: 'Maths, Physics & BEEE', icon: '📐' },
+  { id: 'labs', label: 'Lab Manuals & Code', icon: '🔬' }
+];
+
+export const COLLEGE_NOTES_DATA = [
+  // ── DSA & PROGRAMMING ──
+  {
+    id: 'dsa-master',
+    title: 'Data Structures & Algorithms (Master Notes)',
+    subject: 'Data Structures (BCSE007)',
+    category: 'dsa_prog',
+    type: 'Master Notes',
+    icon: '🌳',
+    file: '/notes/BCSE007_Data_Structures_Master_Notes.pdf',
+    desc: 'Complete theory & implementation for Stacks, Queues, Linked Lists, Trees, Graphs, Sorting & Hashing.',
+    topics: ['Arrays & Matrices', 'Linked Lists', 'Stacks & Queues', 'Trees & BST', 'Graph Traversals (BFS/DFS)', 'Sorting Algorithms'],
+    examPrompt: 'Explain the core Data Structures (Stack, Queue, Linked List, Binary Tree, Graph) with time complexities and key exam diagrams in simple, easy-to-read points.',
+    pyqPrompt: 'Give the top 10 most frequently asked semester exam questions for Data Structures & Algorithms with step-by-step solutions.'
+  },
+  {
+    id: 'dsa-revision',
+    title: 'Data Structures - Exam Revision Sheet',
+    subject: 'Data Structures (BCSE007)',
+    category: 'dsa_prog',
+    type: 'Exam Sheet',
+    icon: '⚡',
+    file: '/notes/BCSE007_Data_Structures_Exam_Revision_Sheet.pdf',
+    desc: 'High-yield 1-night revision summary designed for quick score boosting right before semester exams.',
+    topics: ['Big-O Cheat Sheet', 'Tree Rotations (AVL)', 'Shortest Path (Dijkstra)', 'Hashing Techniques'],
+    examPrompt: 'Give me a fast, 15-minute quick revision cram sheet for Data Structures exam with essential definitions and formulas.',
+    pyqPrompt: 'What are the top 5 must-solve 10-mark questions in Data Structures university exams with answers?'
+  },
+  {
+    id: 'dsa-lab',
+    title: 'Data Structures (DSA) Lab Manual',
+    subject: 'Data Structures Lab (BCSE007)',
+    category: 'labs',
+    type: 'Lab Manual',
+    icon: '💻',
+    file: '/notes/BCSE007_DSA_Lab_Manual.pdf',
+    desc: 'Complete lab experiments with algorithm, flowchart, C/C++ source code, sample inputs, and expected outputs.',
+    topics: ['Stack via Array', 'Queue via Linked List', 'Infix to Postfix', 'BST Insertion & Traversal', 'Graph BFS/DFS'],
+    examPrompt: 'List the most common viva questions asked in Data Structures Practical Exam with crisp answers.',
+    labPrompt: 'Provide 100% clean, working C++ code for standard DSA lab experiments (Stack, Queue, Linked List, BST) with added lines in green and zero git junk.'
+  },
+  {
+    id: 'c-prog-master',
+    title: 'Problem Solving & C Programming (BCSE008)',
+    subject: 'C Programming',
+    category: 'dsa_prog',
+    type: 'Master Notes',
+    icon: '⌨️',
+    file: '/notes/BCSE008_Computational_and_Problem_Solving_using_C_notes.pdf',
+    desc: 'From variables and control statements to Pointers, Dynamic Memory (malloc/calloc), Structures, and File Handling.',
+    topics: ['Control Structures', 'Pointers & Memory', 'Functions & Recursion', 'Structures & Unions', 'File I/O'],
+    examPrompt: 'Explain Pointers, Dynamic Memory Allocation (malloc vs calloc), and Structures in C with simple, clean code snippets.',
+    pyqPrompt: 'Provide the top 10 most repeated university exam questions in C Programming with complete code and explanations.'
+  },
+  {
+    id: 'c-prog-revision',
+    title: 'C Programming Exam Revision Sheet',
+    subject: 'C Programming',
+    category: 'dsa_prog',
+    type: 'Exam Sheet',
+    icon: '⚡',
+    file: '/notes/C Programming Exam Revision Sheet.pdf',
+    desc: 'Quick recap of C syntax, operator precedence, pointer arithmetic, and common runtime traps.',
+    topics: ['Operator Precedence', 'Pointer Traps', 'Storage Classes', 'Preprocessors'],
+    examPrompt: 'Give a bulleted rapid-revision checklist for C programming exam covering the most common theory questions.',
+    pyqPrompt: 'Solve the top 5 tricky output-prediction questions often asked in C programming theory papers.'
+  },
+  {
+    id: 'c-prog-lab',
+    title: 'C Programming Lab Manual (BCSE001)',
+    subject: 'C Programming Lab',
+    category: 'labs',
+    type: 'Lab Manual',
+    icon: '🔬',
+    file: '/notes/BCSE001_C_Programming_Lab_Manual.pdf',
+    desc: 'Official lab programs with problem statements, logic, complete source code, and test cases.',
+    topics: ['Control Flow Programs', 'Array Manipulations', 'String Functions without library', 'Matrix Multiplication', 'File Handling'],
+    examPrompt: 'What are the top viva-voce questions asked in C Programming practical exams?',
+    labPrompt: 'Provide clean, compilable C code for Matrix Multiplication, Palindrome String Check, and Fibonacci Recursion with green highlighted additions.'
+  },
+  {
+    id: 'python-master',
+    title: 'Python Programming Master Notes',
+    subject: 'Python (BCSE004)',
+    category: 'dsa_prog',
+    type: 'Master Notes',
+    icon: '🐍',
+    file: '/notes/Python Programming Master Notes.pdf',
+    desc: 'In-depth guide to Python: Data types, List comprehensions, OOP (Classes/Objects), Exception handling, and Modules.',
+    topics: ['Lists, Tuples, Dicts & Sets', 'Comprehensions', 'OOP in Python', 'File Handling', 'Decorators & Generators'],
+    examPrompt: 'Explain Object-Oriented Programming (OOP) in Python with practical examples (Encapsulation, Inheritance, Polymorphism).',
+    pyqPrompt: 'What are the top 10 most repeated Python Programming exam questions with concise answers?'
+  },
+  {
+    id: 'python-revision',
+    title: 'Python Exam Ready Revision Sheet',
+    subject: 'Python (BCSE004)',
+    category: 'dsa_prog',
+    type: 'Exam Sheet',
+    icon: '⚡',
+    file: '/notes/BCSE004_Python_Programming_Short_Notes_Exam_Ready.pdf',
+    desc: 'Quick exam booster covering built-in methods, lambda functions, slicing tricks, and syntax highlights.',
+    topics: ['String Slicing', 'Dictionary Methods', 'Lambda, Map, Filter', 'Try-Except-Finally'],
+    examPrompt: 'Summarize Python built-in data structures (List, Tuple, Set, Dictionary) with time complexities and key differences in a clean comparison table.',
+    pyqPrompt: 'Solve the top 5 Python code output questions asked in semester exams.'
+  },
+  {
+    id: 'web-tech-master',
+    title: 'Fundamentals of Web Technologies (BCSE012)',
+    subject: 'Web Technologies',
+    category: 'dsa_prog',
+    type: 'Master Notes',
+    icon: '🌐',
+    file: '/notes/BCSE012_Fundamental_of_Web_Technologies_Long_Notes.pdf',
+    desc: 'HTML5 semantic tags, CSS3 styling & Flexbox/Grid, JavaScript DOM manipulation, Event handling, and HTTP protocols.',
+    topics: ['HTML5 Semantics', 'CSS Flexbox & Grid', 'JavaScript DOM', 'AJAX & Fetch API', 'HTTP Request Methods'],
+    examPrompt: 'Explain CSS Box Model, Flexbox vs Grid, and JavaScript Event Loop with simple diagrams and examples.',
+    pyqPrompt: 'Give the top 10 Web Technologies semester exam questions with clean HTML/CSS/JS code examples.'
+  },
+  {
+    id: 'web-tech-lab',
+    title: 'Web Technologies Lab Manual (BCSE013)',
+    subject: 'Web Technologies Lab',
+    category: 'labs',
+    type: 'Lab Manual',
+    icon: '🎨',
+    file: '/notes/BCSE013_Web_Tech_Lab_Manual.pdf',
+    desc: 'Hands-on practicals: Registration forms with validation, responsive CSS layouts, and dynamic JS interactivity.',
+    topics: ['Form Validation with Regex', 'CSS Responsive Navbar', 'DOM Manipulation Projects', 'Interactive Calculator'],
+    examPrompt: 'What are the top viva questions asked in Web Technologies practical exams?',
+    labPrompt: 'Provide clean HTML, modern CSS, and JavaScript for an interactive student registration form with validation.'
+  },
+
+  // ── CORE CS & SYSTEMS ──
+  {
+    id: 'os-short',
+    title: 'Operating Systems (CS401) Short Notes',
+    subject: 'Operating Systems',
+    category: 'core_cs',
+    type: 'Short Notes',
+    icon: '🖥️',
+    file: '/notes/CS401_Operating_Systems_Short_Notes.pdf',
+    desc: 'Process Management, CPU Scheduling, Deadlocks, Memory Management (Paging/Segmentation), and Virtual Memory.',
+    topics: ['CPU Scheduling (FCFS, SJF, RR)', 'Banker\'s Algorithm', 'Deadlock Conditions', 'Paging & TLB', 'Page Replacement (LRU, FIFO)'],
+    examPrompt: 'Explain the 4 necessary conditions for Deadlock and how Banker\'s Algorithm works with an easy numerical example.',
+    pyqPrompt: 'Give the top 10 most repeated Operating Systems university questions with numerical algorithms solved step-by-step.'
+  },
+  {
+    id: 'dbms-short',
+    title: 'Database Management Systems (CS402)',
+    subject: 'DBMS',
+    category: 'core_cs',
+    type: 'Short Notes',
+    icon: '🗄️',
+    file: '/notes/CS402_Database_Management_Systems_Short_Notes.pdf',
+    desc: 'Relational Model, ER Diagrams, Normalization (1NF to BCNF), SQL Queries, Transactions, and ACID Properties.',
+    topics: ['ER Modeling', 'Relational Algebra', 'Normalization (1NF, 2NF, 3NF, BCNF)', 'ACID Properties', 'Serializability & Locking'],
+    examPrompt: 'Explain Database Normalization (1NF, 2NF, 3NF, BCNF) with clear, practical table examples and candidate keys.',
+    pyqPrompt: 'Provide the top 10 frequently asked DBMS semester exam questions with SQL queries and relational algebra.'
+  },
+  {
+    id: 'cn-short',
+    title: 'Computer Networks (CS501) Short Notes',
+    subject: 'Computer Networks',
+    category: 'core_cs',
+    type: 'Short Notes',
+    icon: '📡',
+    file: '/notes/CS501_Computer_Networks_Short_Notes.pdf',
+    desc: 'OSI vs TCP/IP Layers, IP Addressing & Subnetting, Routing Algorithms, TCP vs UDP, and Congestion Control.',
+    topics: ['OSI 7-Layer Architecture', 'IPv4 Addressing & Subnetting', 'TCP 3-Way Handshake', 'Routing (Dijkstra, Bellman-Ford)', 'DNS, HTTP, FTP'],
+    examPrompt: 'Compare the OSI model and TCP/IP protocol stack layer-by-layer with their key protocols and functions in a clean comparison table.',
+    pyqPrompt: 'What are the top 10 Computer Networks semester exam questions? Include subnetting numerical solutions.'
+  },
+  {
+    id: 'dld-short',
+    title: 'Digital Logic & Design (CS302) Notes',
+    subject: 'Digital Logic',
+    category: 'core_cs',
+    type: 'Short Notes',
+    icon: '🔌',
+    file: '/notes/CS302_Digital_Logic_and_Design_Short_Notes.pdf',
+    desc: 'Boolean Algebra, K-Maps, Combinational Circuits (Multiplexers, Encoders, Adders), and Sequential Circuits (Flip-Flops, Counters).',
+    topics: ['Karnaugh Maps (K-Maps)', 'Adders & Subtractors', 'Multiplexers & Demux', 'Flip-Flops (SR, JK, D, T)', 'Synchronous Counters'],
+    examPrompt: 'Explain K-Map simplification rules and solve a 4-variable K-Map problem step-by-step with truth tables.',
+    pyqPrompt: 'Give the top 10 most common exam questions in Digital Electronics with circuit logic diagrams.'
+  },
+  {
+    id: 'cloud-short',
+    title: 'Cloud Computing (CS701) Notes',
+    subject: 'Cloud Computing',
+    category: 'core_cs',
+    type: 'Short Notes',
+    icon: '☁️',
+    file: '/notes/CS701_Cloud_Computing_Notes.pdf',
+    desc: 'Cloud Service Models (IaaS, PaaS, SaaS), Deployment Models (Public, Private, Hybrid), Virtualization, and Containers.',
+    topics: ['IaaS vs PaaS vs SaaS', 'Hypervisors & Virtualization', 'Docker & Kubernetes', 'Cloud Security & SLA'],
+    examPrompt: 'Explain Cloud Service Models (IaaS, PaaS, SaaS) and Deployment Models with real-world examples and architecture diagrams.',
+    pyqPrompt: 'What are the top 8 university exam questions on Cloud Computing with high-scoring answers?'
+  },
+  {
+    id: 'devops-short',
+    title: 'DevOps Engineering (CS801) Notes',
+    subject: 'DevOps Engineering',
+    category: 'core_cs',
+    type: 'Short Notes',
+    icon: '🔄',
+    file: '/notes/CS801_DevOps_Engineering_Notes.pdf',
+    desc: 'CI/CD Pipelines, Git Workflows, Docker Containerization, Infrastructure as Code (Terraform), and Observability.',
+    topics: ['CI/CD Lifecycle', 'Git Branching Strategies', 'Dockerization & Compose', 'Kubernetes Architecture', 'Prometheus & Grafana'],
+    examPrompt: 'Explain the end-to-end CI/CD pipeline lifecycle from code commit to production deployment with diagrams.',
+    pyqPrompt: 'Give the top 10 viva and university exam questions for DevOps Engineering with clear answers.'
+  },
+
+  // ── AI & DATA SCIENCE ──
+  {
+    id: 'aiml-master',
+    title: 'Artificial Intelligence & Machine Learning (Master Notes)',
+    subject: 'AI & ML (BCSE011)',
+    category: 'ai_ml',
+    type: 'Master Notes',
+    icon: '🧠',
+    file: '/notes/AIML_notes.pdf',
+    desc: 'Search Algorithms (A*, Minimax), Supervised & Unsupervised Learning, Neural Networks, Decision Trees, and Evaluation Metrics.',
+    topics: ['A* & Heuristic Search', 'Linear & Logistic Regression', 'Decision Trees & Random Forests', 'Neural Networks Backprop', 'Precision, Recall & F1'],
+    examPrompt: 'Explain the A* Search algorithm step-by-step with an example and admissibility condition ($h(n) \\le h^*(n)$).',
+    pyqPrompt: 'Give the top 10 most repeated Artificial Intelligence & Machine Learning semester exam questions with mathematical formulations.'
+  },
+  {
+    id: 'aiml-revision',
+    title: 'AI & ML Exam Ready Short Notes',
+    subject: 'AI & ML (BCSE011)',
+    category: 'ai_ml',
+    type: 'Exam Sheet',
+    icon: '⚡',
+    file: '/notes/AIML_Short_Notes_Exam_Ready.pdf',
+    desc: 'High-speed exam cram sheet: Loss functions, Gradient Descent, Overfitting vs Underfitting, and Bias-Variance Tradeoff.',
+    topics: ['Bias-Variance Tradeoff', 'Gradient Descent Variants', 'SVM Margins', 'K-Means Clustering Steps'],
+    examPrompt: 'Explain the Bias-Variance tradeoff and how to fix Overfitting (Regularization, Cross-Validation, Dropout) in simple terms.',
+    pyqPrompt: 'Solve the top 5 numerical exam problems in Machine Learning (Naive Bayes classifier, Decision Tree entropy).'
+  },
+  {
+    id: 'aiml-lab',
+    title: 'AI & Machine Learning Lab Manual (BCSE011)',
+    subject: 'AI & ML Lab',
+    category: 'labs',
+    type: 'Lab Manual',
+    icon: '🔬',
+    file: '/notes/BCSE011_AIML_Lab_Manual.pdf',
+    desc: 'Practical implementations in Python: Scikit-learn models, Data preprocessing, Confusion matrix, and Clustering.',
+    topics: ['Dataset Preprocessing', 'Linear Regression from scratch', 'KNN Classifier', 'K-Means Clustering', 'Confusion Matrix Analysis'],
+    examPrompt: 'What are the top viva questions for Machine Learning lab exams with crisp, accurate answers?',
+    labPrompt: 'Provide complete Python code for implementing Linear Regression and KNN Classifier with Scikit-Learn and evaluation metrics.'
+  },
+
+  // ── MATHS, PHYSICS & BEEE ──
+  {
+    id: 'math1-master',
+    title: 'Engineering Mathematics I (Master Notes)',
+    subject: 'Mathematics I (BMAT001)',
+    category: 'engineering_sciences',
+    type: 'Master Notes',
+    icon: '📐',
+    file: '/notes/Mathematics_1_notes.pdf',
+    desc: 'Matrices & Eigenvalues, Differential Calculus (Rolle\'s, Mean Value, Taylor series), Partial Derivatives, and Multiple Integrals.',
+    topics: ['Eigenvalues & Eigenvectors', 'Cayley-Hamilton Theorem', 'Taylor & Maclaurin Series', 'Maxima & Minima of Two Variables', 'Double & Triple Integrals'],
+    examPrompt: 'State and prove the Cayley-Hamilton Theorem and show how to find $A^{-1}$ using it with a numerical matrix example.',
+    pyqPrompt: 'Provide the top 10 must-solve university exam questions in Engineering Mathematics I with full step-by-step solutions.'
+  },
+  {
+    id: 'math1-revision',
+    title: 'Mathematics I Exam Ready Short Notes',
+    subject: 'Mathematics I (BMAT001)',
+    category: 'engineering_sciences',
+    type: 'Exam Sheet',
+    icon: '⚡',
+    file: '/notes/Mathematics_1_Short_Notes_Exam_Ready.pdf',
+    desc: 'Formula cheat sheet: Rank of matrix, Diagonalization, Radius of curvature, and Jacobians.',
+    topics: ['Matrix Rank & System of Equations', 'Jacobian Transformations', 'Lagrange Multipliers', 'Beta & Gamma Functions'],
+    examPrompt: 'Give me a comprehensive formula cheat sheet for Engineering Mathematics I covering all 5 units for semester exam revision.',
+    pyqPrompt: 'Solve 3 classic 10-mark exam problems on Eigenvalues, Diagonalization, and Maxima-Minima.'
+  },
+  {
+    id: 'physics-master',
+    title: 'Applied Physics Master Notes (PHYS102)',
+    subject: 'Applied Physics',
+    category: 'engineering_sciences',
+    type: 'Master Notes',
+    icon: '⚛️',
+    file: '/notes/Applied Physics Master Notes.pdf',
+    desc: 'Wave Optics (Interference, Diffraction), Lasers & Fiber Optics, Quantum Mechanics (Schrödinger equation), and Superconductivity.',
+    topics: ['Interference (Newton\'s Rings)', 'Diffraction Grating', 'Ruby & He-Ne Laser', 'Schrödinger Time-Independent Equation', 'Meissner Effect'],
+    examPrompt: 'Derive the expression for the diameter of Newton\'s Rings in reflected light and explain why the central ring is dark.',
+    pyqPrompt: 'Give the top 10 most repeated Applied Physics semester exam derivations with step-by-step working.'
+  },
+  {
+    id: 'physics-revision',
+    title: 'Applied Physics Exam Revision Sheet',
+    subject: 'Applied Physics',
+    category: 'engineering_sciences',
+    type: 'Exam Sheet',
+    icon: '⚡',
+    file: '/notes/Applied Physics Exam Revision Sheet.pdf',
+    desc: 'Rapid revision sheets: Optical fiber numerical aperture, de-Broglie wavelength, and laser population inversion.',
+    topics: ['Numerical Aperture & Acceptance Angle', 'Compton Effect Formula', 'Heisenberg Uncertainty Principle', 'Type I vs Type II Superconductors'],
+    examPrompt: 'Summarize the key derivations in Wave Optics, Quantum Mechanics, and Fiber Optics in an easy-to-memorize exam summary.',
+    pyqPrompt: 'Solve the top 5 numerical problems in Applied Physics (Newton\'s rings wavelength, fiber numerical aperture).'
+  },
+  {
+    id: 'beee-master',
+    title: 'Basic Electrical & Electronics (BEEE)',
+    subject: 'BEEE (BELE001)',
+    category: 'engineering_sciences',
+    type: 'Master Notes',
+    icon: '⚡',
+    file: '/notes/BEEE_notes.pdf',
+    desc: 'DC Circuits (KVL, KCL, Thevenin, Norton), AC Fundamentals, Transformers, BJT Characteristics, and Op-Amps.',
+    topics: ['Thevenin\'s & Norton\'s Theorems', 'Superposition & Maximum Power', 'Single Phase Transformers', 'BJT in CE Mode', 'Inverting & Non-Inverting Op-Amp'],
+    examPrompt: 'State and explain Thevenin\'s Theorem with a step-by-step numerical circuit example showing $V_{th}$ and $R_{th}$ calculations.',
+    pyqPrompt: 'What are the top 10 most frequently asked semester exam questions in Basic Electrical & Electronics Engineering?'
+  },
+  {
+    id: 'beee-revision',
+    title: 'BEEE Exam Ready Revision Sheet',
+    subject: 'BEEE (BELE001)',
+    category: 'engineering_sciences',
+    type: 'Exam Sheet',
+    icon: '⚡',
+    file: '/notes/BEEE_Short_Notes_Exam_Ready.pdf',
+    desc: 'Rapid circuit theorems recap, transformer efficiency formulas, and transistor operating regions.',
+    topics: ['Circuit Theorems Summary', 'Power Factor & Resonance', 'Transformer EMF Equation', 'Diode Rectifiers (Half vs Full Wave)'],
+    examPrompt: 'Provide a clean comparison table for Thevenin vs Norton theorem and Half-Wave vs Full-Wave rectifier with formulas.',
+    pyqPrompt: 'Solve 3 classic circuit theorem numericals (Mesh Analysis, Thevenin\'s Theorem, Superposition).'
+  },
+  {
+    id: 'beee-lab',
+    title: 'BEEE Lab Manual (BELE001)',
+    subject: 'BEEE Lab',
+    category: 'labs',
+    type: 'Lab Manual',
+    icon: '🔬',
+    file: '/notes/BELE001_BEEE_Lab_Manual.pdf',
+    desc: 'Verification of KVL/KCL, Thevenin/Norton verification, Single phase transformer O.C./S.C. test, and PN Junction V-I curves.',
+    topics: ['KVL and KCL Verification', 'Superposition Theorem', 'Thevenin\'s Theorem Verification', 'V-I Characteristics of PN Junction Diode'],
+    examPrompt: 'What are the top viva questions for Basic Electrical Engineering practical exams with direct answers?',
+    labPrompt: 'Explain how to verify Thevenin\'s theorem in the laboratory with circuit diagram, procedure, and observation table.'
+  }
+];
