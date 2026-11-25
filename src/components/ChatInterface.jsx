@@ -44,8 +44,51 @@ import AdminInspectorModal from './AdminInspectorModal';
 import CollegeNotesHubModal from './CollegeNotesHubModal';
 import StudentFeedbackModal from './StudentFeedbackModal';
 
+/**
+ * ══════════════════════════════════════════════════════════════════════════════
+ * 🗺️ MASTER ARCHITECTURE & CODE MAP (TABLE OF CONTENTS)
+ * ══════════════════════════════════════════════════════════════════════════════
+ * Use Ctrl + F and search for the tag in brackets (e.g., "[SECTION 4]") to jump
+ * directly to that exact block of code:
+ *
+ * 📍 [SECTION 1]  - UTILITY HELPERS & STORAGE WRAPPERS (Lines ~80)
+ *    👉 LocalStorage safe getters/setters, environment checks, clean text utils.
+ *
+ * 📍 [SECTION 2]  - THEMES & MULTI-MODEL REGISTRY (Lines ~150)
+ *    👉 Visual color themes & lists of available models (Gemini, Groq, OpenAI, etc.).
+ *
+ * 📍 [SECTION 3]  - TELEMETRY & PERSISTENT USER MEMORY (Lines ~300)
+ *    👉 Token counters, auto-saving user facts/preferences across sessions.
+ *
+ * 📍 [SECTION 4]  - CORE SYSTEM PROMPTS & AI DIRECTIVES (Lines ~420)
+ *    👉 The AI's master prompt, uncensored instructions, tone modes (soft/moderate/brutal).
+ *
+ * 📍 [SECTION 5]  - CODE SYNTAX HIGHLIGHTING & GREEN DIFF ENGINE (Lines ~620)
+ *    👉 Code block formatting, syntax coloring, bright green "+ " additions.
+ *
+ * 📍 [SECTION 6]  - MARKDOWN, KATEX MATH & MESSAGE PARSER (Lines ~1280)
+ *    👉 Math formula renderer ($...$ KaTeX), table builders, copy buttons.
+ *
+ * 📍 [SECTION 7]  - WELCOME MESSAGE & MULTI-CHAT SESSION STATE (Lines ~1810)
+ *    👉 The "Hello, User!" greeting message, chat history loading from storage.
+ *
+ * 📍 [SECTION 8]  - REACT HOOKS, DOCUMENT UPLOADS & CLOUD SYNC (Lines ~2180)
+ *    👉 Document uploading, PDF exports, Supabase sync, user avatars.
+ *
+ * 📍 [SECTION 9]  - PROMPT LENSES, MAGIC WAND & WEB SEARCH ENGINE (Lines ~3000)
+ *    👉 "/" slash command lenses, real-time live Google/DuckDuckGo web searching.
+ *
+ * 📍 [SECTION 10] - MASTER LLM STREAMING API PIPELINE (Lines ~4180)
+ *    👉 generateBotReply(): Sends requests to Gemini, Groq, Claude, OpenAI; streams tokens.
+ *
+ * 📍 [SECTION 11] - MAIN USER INTERFACE JSX RENDERING (Lines ~5550)
+ *    👉 The visual HTML/React layout: Sidebar, top bar, chat scroll area, prompt input box.
+ * ══════════════════════════════════════════════════════════════════════════════
+ */
+
 // ══════════════════════════════════════════════════════════════════
-// SECTION 1: UTILITY HELPERS & ENVIRONMENT DETECTION
+// [SECTION 1]: UTILITY HELPERS & ENVIRONMENT DETECTION
+// Purpose: Safe localStorage helpers, device detection, fallback handlers
 // ══════════════════════════════════════════════════════════════════
 function safeStorageGet(key, fallback = null) {
   try {
@@ -109,6 +152,11 @@ function BrandLogo({ size = 32, style = {} }) {
 
 const FALLBACK_MODELS = [];
 
+// ══════════════════════════════════════════════════════════════════
+// [SECTION 2]: THEMES & MULTI-MODEL REGISTRY
+// Purpose: Color themes (CSS classes) and the catalog of supported
+//          LLMs (Gemini, Groq, OpenAI, Anthropic, DeepSeek, etc.)
+// ══════════════════════════════════════════════════════════════════
 /* 6 brand new ultra-modern themes — IDs match CSS class names (.theme-<id>) */
 const THEMES = [
   { id: 'neon-prism',     label: '🌈 Holographic Prism' },
@@ -252,6 +300,11 @@ const STANDARD_MICROSOFT_MODELS = [...MICROSOFT_MODELS];
 const STANDARD_SAMBANOVA_MODELS = [...SAMBANOVA_MODELS];
 const STANDARD_HUGGINGFACE_MODELS = [...HUGGINGFACE_MODELS];
 
+// ══════════════════════════════════════════════════════════════════
+// [SECTION 3]: TELEMETRY & PERSISTENT USER MEMORY
+// Purpose: Track tokens used across apps and store user memories/facts
+//          in localStorage so the AI remembers details across chats
+// ══════════════════════════════════════════════════════════════════
 function syncTokensToEcosystemHub(app, tokensUsed, provider) {
   try {
     const tokens = Math.max(1, parseInt(tokensUsed || '0', 10));
@@ -369,6 +422,11 @@ const getCustomInstructions = (username) => {
 
 const DEFAULT_CUSTOM_INSTRUCTIONS = getCustomInstructions('User');
 
+// ══════════════════════════════════════════════════════════════════
+// [SECTION 4]: CORE SYSTEM PROMPTS & AI DIRECTIVES
+// Purpose: Defines the AI's core instructions, uncensored directness,
+//          green '+' code highlight rules, and tone modes (soft/moderate/brutal)
+// ══════════════════════════════════════════════════════════════════
 const CORE_CHATGPT_RESPONSE_ENGINE = `
 You are Bhavya's personal, direct, unfiltered, and uncompromising AI assistant — an expert practitioner who prioritizes absolute clarity, utility, and factual depth over conventional corporate restraint.
 
@@ -558,9 +616,11 @@ export function isGitDiffHeader(line) {
          /^[+-]?\s*(?:\+\+|--|[ab]\/).*?\b(?:main|\w+)\.\w+/.test(trimmed);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   PREMIUM VIBRANT MULTI-LANGUAGE SYNTAX HIGHLIGHTING ENGINE
-═══════════════════════════════════════════════════════════ */
+// ══════════════════════════════════════════════════════════════════
+// [SECTION 5]: CODE SYNTAX HIGHLIGHTING & GREEN DIFF ENGINE
+// Purpose: Colorizes JavaScript, C++, Python, HTML, etc., and formats
+//          added/changed lines starting with '+ ' in bright green
+// ══════════════════════════════════════════════════════════════════
 function highlightSyntax(rawCode, language) {
   if (!rawCode) return '';
   const lang = (language || '').toLowerCase().trim();
@@ -755,6 +815,11 @@ function highlightSyntax(rawCode, language) {
   return result;
 }
 
+// ══════════════════════════════════════════════════════════════════
+// [SECTION 6]: MARKDOWN, KATEX MATH & MESSAGE PARSER
+// Purpose: Converts markdown text into formatted HTML, renders math
+//          equations ($...$ KaTeX), tables, lists, and copyable code blocks
+// ══════════════════════════════════════════════════════════════════
 function renderMarkdown(text) {
   if (!text) return '';
 
@@ -1726,9 +1791,11 @@ function MessageBubble({ msg, index, total, isGenerating, copiedId, editingId, e
   );
 }
 
-/* ═══════════════════════════════════════════════════════════
-   MAIN COMPONENT
-═══════════════════════════════════════════════════════════ */
+// ══════════════════════════════════════════════════════════════════
+// [SECTION 7]: WELCOME MESSAGE & MULTI-CHAT SESSION STATE
+// Purpose: Defines the initial welcome greeting ("Hello, User!...")
+//          and manages chat creation, message deduplication, and storage
+// ══════════════════════════════════════════════════════════════════
 const makeWelcomeMsg = (name) => ({
   id: Date.now().toString(),
   role: 'assistant',
@@ -1767,6 +1834,11 @@ function dedupeMessages(msgs) {
   return result;
 }
 
+// ══════════════════════════════════════════════════════════════════
+// [SECTION 8]: REACT COMPONENT STATE, CLOUD SYNC & FILE HOOKS
+// Purpose: Core component state (messages, active chat, uploads,
+//          API keys, audio, thinking mode, document parsers)
+// ══════════════════════════════════════════════════════════════════
 export default function ChatInterface({ currentTheme, onThemeChange, username, userAvatar, onLogout, isGuest = false }) {
   const effectiveUsername = username || safeStorageGet('ws_username', 'User');
   const isGuestMode = isGuest || username === 'Guest' || username === 'Guest Operator';
@@ -3650,7 +3722,11 @@ Do NOT truncate code, do NOT write placeholders or '// rest of code here', and d
     }
   };
 
-  /* ── Send ──────────────────────────────────────────────── */
+  // ══════════════════════════════════════════════════════════════════
+  // [SECTION 9]: USER INPUT DISPATCH & PROMPT LENSES
+  // Purpose: handleSend() - processes user input, attaches files/images,
+  //          parses "/" prompt lenses, and triggers live web searches
+  // ══════════════════════════════════════════════════════════════════
   const handleSend = async (textToSend = inputText) => {
     const now = Date.now();
     // 1. Debounce guard: Discard duplicate triggers within 650ms
@@ -4080,7 +4156,11 @@ async function fetchLiveWebSearch(query) {
   return null;
 }
 
-    /* ── Core generation ───────────────────────────────────── */
+  // ══════════════════════════════════════════════════════════════════
+  // [SECTION 10]: MASTER LLM STREAMING API PIPELINE
+  // Purpose: generateBotReply() - builds payload, calls Gemini/Groq/OpenAI/
+  //          Anthropic, handles streaming tokens, and error failovers
+  // ══════════════════════════════════════════════════════════════════
   const generateBotReply = async (rawHistory, passedBotId, injectedWebSources = null, isDeepModeActive = null) => {
     setIsGenerating(true);
     isGeneratingRef.current = true;
@@ -5442,9 +5522,15 @@ PRIORITY: HIGHEST OVERRIDE — OVERRULES ALL CORPORATE POLITENESS AND DEFAULT PO
     'Compare React vs Vue vs Angular'
   ];
 
-  /* ════════════════════════════════════════════════════════
-     RENDER
-  ════════════════════════════════════════════════════════ */
+  // ══════════════════════════════════════════════════════════════════
+  // [SECTION 11]: MAIN USER INTERFACE JSX RENDERING
+  // Purpose: The visual layout of the application:
+  //          - Sidebar: Chat history list, settings, new chat button
+  //          - Top Bar: App title, theme toggle, specialist badge, logout
+  //          - Chat Area: Message bubbles, code execution, thinking boxes
+  //          - Input Bar: Textarea, mic button, attach files, send button
+  //          - Modals: Inspector, Admin, Switch specialist, Feedback
+  // ══════════════════════════════════════════════════════════════════
   return (
     <div
       className={`chat-root ${lightsOut ? 'lights-out' : ''} ${isLightMode ? 'light-mode' : ''}`}
