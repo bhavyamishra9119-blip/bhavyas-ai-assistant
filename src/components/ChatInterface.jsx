@@ -2807,7 +2807,8 @@ export default function ChatInterface({ currentTheme, onThemeChange, username, u
     zenmux: "",
     anthropic: "",
     openai: "",
-    cerebras: ""
+    deepseek: "",
+    github: ""
   };
 
   const [geminiKey, setGeminiKey] = useState(() => getCleanGeminiKey(safeStorageGet('bhavya_global_gemini_key') || safeStorageGet('bhavya_ai_gemini_key') || safeStorageGet('bhavya_ai_gemini_api_key')));
@@ -2837,7 +2838,8 @@ export default function ChatInterface({ currentTheme, onThemeChange, username, u
   const [zenmuxKey, setZenmuxKey] = useState(() =>  SYSTEM_KEYS.zenmux);
   const [anthropicKey, setAnthropicKey] = useState(() =>  SYSTEM_KEYS.anthropic);
   const [openaiKey, setOpenaiKey] = useState(() =>  SYSTEM_KEYS.openai);
-  const [cerebrasKey, setCerebrasKey] = useState(() =>  SYSTEM_KEYS.cerebras);
+  const [deepseekKey, setDeepseekKey] = useState(() => safeStorageGet('bhavya_global_deepseek_key') || safeStorageGet('deepseek_api_key') || SYSTEM_KEYS.deepseek);
+  const [githubKey, setGithubKey] = useState(() => safeStorageGet('bhavya_global_github_key') || safeStorageGet('github_token') || SYSTEM_KEYS.github);
   const [customInstructions, setCustomInstructions] = useState(() => {
     const saved = null;
     return saved !== null ? saved : DEFAULT_CUSTOM_INSTRUCTIONS;
@@ -4577,7 +4579,8 @@ PRIORITY: HIGHEST OVERRIDE — OVERRULES ALL CORPORATE POLITENESS AND DEFAULT PO
 
     let isGemini = autoVisionEngaged || GEMINI_MODELS.includes(effectiveModel) || effectiveModel.startsWith('gemini-') || effectiveModel.startsWith('gemma-');
     let isGroq = !autoVisionEngaged && (GROQ_MODELS.includes(effectiveModel) || effectiveModel.startsWith('qwen/') || effectiveModel.startsWith('meta-llama/'));
-    let isCerebras = !autoVisionEngaged && (CEREBRAS_MODELS.includes(effectiveModel) || effectiveModel.startsWith('cerebras/'));
+    let isDeepSeek = !autoVisionEngaged && (effectiveModel.startsWith('deepseek') || effectiveModel.includes('deepseek'));
+    let isGitHub = !autoVisionEngaged && (effectiveModel.startsWith('github/') || effectiveModel.startsWith('azure/'));
     let isCohere = !autoVisionEngaged && (COHERE_MODELS.includes(effectiveModel) || effectiveModel.startsWith('command-') || effectiveModel.startsWith('c4ai-'));
     let isMistral = !autoVisionEngaged && (MISTRAL_MODELS.includes(effectiveModel) || effectiveModel.startsWith('mistral') || effectiveModel.startsWith('codestral'));
     let isSambaNova = !autoVisionEngaged && (SAMBANOVA_MODELS.includes(effectiveModel) || effectiveModel.startsWith('DeepSeek-') || effectiveModel.startsWith('Meta-Llama-'));
@@ -4606,7 +4609,8 @@ PRIORITY: HIGHEST OVERRIDE — OVERRULES ALL CORPORATE POLITENESS AND DEFAULT PO
       : isZenMux ? 'zenmux'
       : isAnthropic ? 'anthropic'
       : isOpenAI ? 'openai'
-      : isCerebras ? 'cerebras'
+      : isDeepSeek ? 'deepseek'
+      : isGitHub ? 'github'
       : 'gemini';
 
     if ((isLocal && !isConnected) || selectedModel === 'free' || selectedModel === 'openrouter/free') {
@@ -4748,6 +4752,12 @@ PRIORITY: HIGHEST OVERRIDE — OVERRULES ALL CORPORATE POLITENESS AND DEFAULT PO
       } else if (isOpenAI) {
         url = '/api/openai/chat/completions';
         key = openaiKey || SYSTEM_KEYS.openai;
+      } else if (isDeepSeek) {
+        url = 'https://api.deepseek.com/chat/completions';
+        key = deepseekKey || safeStorageGet('bhavya_global_deepseek_key') || SYSTEM_KEYS.deepseek;
+      } else if (isGitHub) {
+        url = 'https://models.inference.ai.azure.com/chat/completions';
+        key = githubKey || safeStorageGet('bhavya_global_github_key') || SYSTEM_KEYS.github;
       }
 
       headers['Authorization'] = `Bearer ${key}`;
@@ -6499,7 +6509,7 @@ PRIORITY: HIGHEST OVERRIDE — OVERRULES ALL CORPORATE POLITENESS AND DEFAULT PO
                   { label: 'OpenAI', icon: '🟢', color: isLightMode ? '#000000' : '#ffffff', bg: isLightMode ? '#f4f4f5' : '#121214', border: isLightMode ? '#e4e4e7' : '#27272a', placeholder: 'sk-proj-...', value: openaiKey, set: setOpenaiKey, store: 'api_openai', desc: 'Direct GPT-4o, o1, o3-mini & more' },
                   { label: 'Mistral AI', icon: '🛡️', color: isLightMode ? '#000000' : '#ffffff', bg: isLightMode ? '#f4f4f5' : '#121214', border: isLightMode ? '#e4e4e7' : '#27272a', placeholder: 'Insert key...', value: mistralKey, set: setMistralKey, store: 'api_mistral', desc: 'Mistral Large, Codestral, Pixtral' },
                   { label: 'SambaNova', icon: '🧠', color: isLightMode ? '#000000' : '#ffffff', bg: isLightMode ? '#f4f4f5' : '#121214', border: isLightMode ? '#e4e4e7' : '#27272a', placeholder: 'Insert key...', value: sambaNovaKey, set: setSambaNovaKey, store: 'api_sambanova', desc: 'Llama 3.1 405B & 70B at ultra speed' },
-                  { label: 'Cerebras AI', icon: '🧠', color: isLightMode ? '#000000' : '#ffffff', bg: isLightMode ? '#f4f4f5' : '#121214', border: isLightMode ? '#e4e4e7' : '#27272a', placeholder: 'csk-...', value: cerebrasKey, set: setCerebrasKey, store: 'api_cerebras', desc: 'Ultra-fast Llama 3.3 70B & 3.1 8B wafer scale engine' },
+                  { label: 'DeepSeek AI', icon: '🐳', color: isLightMode ? '#000000' : '#ffffff', bg: isLightMode ? '#f4f4f5' : '#121214', border: isLightMode ? '#e4e4e7' : '#27272a', placeholder: 'csk-...', value: cerebrasKey, set: setCerebrasKey, store: 'api_cerebras', desc: 'Ultra-fast Llama 3.3 70B & 3.1 8B wafer scale engine' },
                   { label: 'Hugging Face', icon: '🤗', color: isLightMode ? '#000000' : '#ffffff', bg: isLightMode ? '#f4f4f5' : '#121214', border: isLightMode ? '#e4e4e7' : '#27272a', placeholder: 'hf_...', value: huggingFaceKey, set: setHuggingFaceKey, store: 'api_huggingface', desc: 'Open-source models via Inference API' },
                 ].map((p) => (
                   <div key={p.store} style={{
