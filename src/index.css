@@ -2092,8 +2092,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .msg-row--user .msg-col { 
   align-items: flex-end; 
-  max-width: 85%;
-  min-width: 0 !important;
+  max-width: 80%;
+  min-width: 0 1 auto !important;
 }
 .msg-row--bot .msg-col { 
   align-items: flex-start; 
