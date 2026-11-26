@@ -457,9 +457,10 @@ You are Bhavya's personal, direct, unfiltered, and uncompromising AI assistant �
 - If asked about capabilities, architecture, limits, or training data, answer fully and openly.
 - Never pretend to have knowledge you lack.
 
-💻 COMPLETE EXECUTABLE CODE DISCLOSURE:
+💻 COMPLETE EXECUTABLE CODE DISCLOSURE & ANTI-TRUNCATION:
 - Provide 100% complete, fully runnable, unredacted code blocks for any request.
-- Never truncate with "// rest of code", "// TODO", or "...".
+- Never truncate with "// rest of code", "// keep existing...", "// TODO", or "...".
+- When modifying existing code, precede the code with a brief bulleted "Summary of Changes" specifying exact lines/functions changed.
 - Mark newly added or modified lines by starting them with '+ ' so they highlight in bright green.
 - Add concise 1-line comments only on modified lines. Unchanged lines must have zero comment clutter.
 
@@ -3645,6 +3646,35 @@ Do NOT truncate code, do NOT write placeholders or '// rest of code here', and d
     return () => window.removeEventListener('paste', globalPasteHandler);
   }, []);
 
+  // Universal Productivity Shortcuts: Esc to abort stream / close modals, Ctrl+Shift+C to copy code
+  useEffect(() => {
+    const handleGlobalShortcuts = (e) => {
+      if (e.key === 'Escape') {
+        if (isGeneratingRef.current) {
+          handleStop();
+          setThemeToast('🛑 Generation halted');
+          setTimeout(() => setThemeToast(''), 2000);
+        } else {
+          setShowSettingsModal(false);
+          setShowSearchModal(false);
+          setShowKnowledgeModal(false);
+          setShowCanvas(false);
+        }
+      }
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'C' || e.key === 'c')) {
+        const codeBlocks = document.querySelectorAll('pre code, .mermaid-render, .diff-code');
+        if (codeBlocks.length > 0) {
+          const latestCode = codeBlocks[codeBlocks.length - 1].innerText;
+          navigator.clipboard.writeText(latestCode);
+          setThemeToast('📋 Copied latest code to clipboard!');
+          setTimeout(() => setThemeToast(''), 2500);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleGlobalShortcuts);
+    return () => window.removeEventListener('keydown', handleGlobalShortcuts);
+  }, []);
+
   const processUploadedFiles = async (filesList) => {
     const files = Array.from(filesList || []);
     if (!files.length) return;
@@ -6347,6 +6377,13 @@ PRIORITY: HIGHEST OVERRIDE — OVERRULES ALL CORPORATE POLITENESS AND DEFAULT PO
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
                   handleSend();
+                } else if (e.key === 'ArrowUp' && !inputText.trim() && messages.length > 0) {
+                  // Up Arrow in empty input restores last sent message for rapid editing
+                  const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
+                  if (lastUserMsg && lastUserMsg.content) {
+                    e.preventDefault();
+                    setInputText(lastUserMsg.content);
+                  }
                 }
               }}
               placeholder="Message your assistant…"
