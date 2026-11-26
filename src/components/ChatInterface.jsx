@@ -2809,15 +2809,24 @@ export default function ChatInterface({ currentTheme, onThemeChange, username, u
     cerebras: ""
   };
 
-  const [geminiKey, setGeminiKey] = useState(() => getCleanGeminiKey(safeStorageGet('bhavya_ai_gemini_key') || safeStorageGet('bhavya_ai_gemini_api_key')));
-  const [groqKey, setGroqKey] = useState(() => safeStorageGet('bhavya_ai_groq_key') || safeStorageGet('bhavya_ai_groq_api_key') || SYSTEM_KEYS.groq);
-  const [openRouterKey, setOpenRouterKey] = useState(() => safeStorageGet('bhavya_ai_openrouter_key') || safeStorageGet('bhavya_ai_openrouter_api_key') || SYSTEM_KEYS.openRouter);
+  const [geminiKey, setGeminiKey] = useState(() => getCleanGeminiKey(safeStorageGet('bhavya_global_gemini_key') || safeStorageGet('bhavya_ai_gemini_key') || safeStorageGet('bhavya_ai_gemini_api_key')));
+  const [groqKey, setGroqKey] = useState(() => safeStorageGet('bhavya_global_groq_key') || safeStorageGet('bhavya_ai_groq_key') || safeStorageGet('bhavya_ai_groq_api_key') || SYSTEM_KEYS.groq);
+  const [openRouterKey, setOpenRouterKey] = useState(() => safeStorageGet('bhavya_global_openrouter_key') || safeStorageGet('bhavya_ai_openrouter_key') || safeStorageGet('bhavya_ai_openrouter_api_key') || SYSTEM_KEYS.openRouter);
 
-  // Sync to shared cross-app storage whenever keys change
+  // Sync to shared cross-app global storage whenever keys change (Pillar 1: Single Source of Truth)
   useEffect(() => {
-    if (geminiKey) safeStorageSet('bhavya_ai_gemini_key', geminiKey);
-    if (groqKey) safeStorageSet('bhavya_ai_groq_key', groqKey);
-    if (openRouterKey) safeStorageSet('bhavya_ai_openrouter_key', openRouterKey);
+    if (geminiKey) {
+      safeStorageSet('bhavya_ai_gemini_key', geminiKey);
+      safeStorageSet('bhavya_global_gemini_key', geminiKey);
+    }
+    if (groqKey) {
+      safeStorageSet('bhavya_ai_groq_key', groqKey);
+      safeStorageSet('bhavya_global_groq_key', groqKey);
+    }
+    if (openRouterKey) {
+      safeStorageSet('bhavya_ai_openrouter_key', openRouterKey);
+      safeStorageSet('bhavya_global_openrouter_key', openRouterKey);
+    }
   }, [geminiKey, groqKey, openRouterKey]);
   const [cohereKey, setCohereKey] = useState(() =>  SYSTEM_KEYS.cohere);
   const [huggingFaceKey, setHuggingFaceKey] = useState(() =>  SYSTEM_KEYS.huggingFace);
